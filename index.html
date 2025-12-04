@@ -1,84 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Rumbling Rangers</title>
+  <title>Rumbling Rangers</title>
+  <link rel="stylesheet" href="asstes/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 <body>
-    <script>
-        // --------------------------------------
-        // BOT SYSTEM
-        // --------------------------------------
 
-        // Example bot settings
-        const bots = [
-        { name: "Bot A", accuracy: 0.40, minTime: 2000, maxTime: 4000 },
-        { name: "Bot B", accuracy: 0.55, minTime: 1800, maxTime: 3500 }
-        ];
+  <h1>Rumbling Rangers</h1>
+  <p>Solve slope questions to move your horse forward!</p>
 
-        let currentCorrectAnswer = null;
+  <div id="track">
+    <div class="horse" id="player"></div>
+    <div class="horse" id="botA"></div>
+    <div class="horse" id="botB"></div>
+  </div>
 
-        // Function to calculate the real slope
-        function getSlope(x1, y1, x2, y2) {
-        return (y2 - y1) / (x2 - x1);
-        }
+  <div id="question"></div>
 
-        // Call this whenever a new question is generated:
-        function askBots(question, correctAnswer) {
-        bots.forEach(bot => {
-            const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
+  <input id="answerInput" placeholder="Enter slope">
+  <button onclick="playerSubmit()">Submit</button>
 
-            setTimeout(() => {
-            let botAnswer;
+  <h2 id="status"></h2>
 
-            // Decide if bot gets it right or wrong
-            if (Math.random() < bot.accuracy) {
-                botAnswer = correctAnswer;
-            } else {
-                botAnswer = correctAnswer + (Math.floor(Math.random() * 5) - 2);
-            }
-
-            handleBotAnswer(bot, botAnswer);
-
-            }, time);
-        });
-        }
-
-        // What happens when a bot answers
-        function handleBotAnswer(bot, answer) {
-            console.log(bot.name + " answered: " + answer);
-
-            if (answer === currentCorrectAnswer) {
-                moveHorse(bot.name, 10);
-            } else {
-                moveHorse(bot.name, 3);
-            }
-        }
-
-        function moveHorse(name, distance) {
-            console.log(name + " moved " + distance + " units");
-        }
-
-        // --------------------------------------
-        // QUESTION GENERATOR
-        // --------------------------------------
-
-        function generateQuestion() {
-        let x1 = 2, y1 = 4, x2 = 5, y2 = 10;
-
-        const slope = getSlope(x1, y1, x2, y2);
-        currentCorrectAnswer = slope;
-
-        // show question to player here
-        console.log("Slope question:", slope);
-
-        // send question to bots
-        askBots({ x1, y1, x2, y2 }, slope);
-        }
-
-        // Run the first question:
-        generateQuestion();
-    </script>
+  <script src="assets/script.js"></script>
 </body>
 </html>

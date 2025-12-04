@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumbling Rangers</title>
+</head>
+<body>
+    <script>
+        // Example bot settings
+        const bots = [
+        { name: "Bot A", accuracy: 0.40, minTime: 2000, maxTime: 4000 },
+        { name: "Bot B", accuracy: 0.55, minTime: 1800, maxTime: 3500 }
+        ];
+
+        // Function to calculate the real slope
+        function getSlope(x1, y1, x2, y2) {
+        return (y2 - y1) / (x2 - x1);
+        }
+
+        // Call this whenever a new question is generated:
+        function askBots(question, correctAnswer) {
+        bots.forEach(bot => {
+            const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
+
+            setTimeout(() => {
+            let botAnswer;
+
+            // Decide if bot gets it right or wrong
+            if (Math.random() < bot.accuracy) {
+                botAnswer = correctAnswer; // correct
+            } else {
+                // wrong but close-ish answer
+                botAnswer = correctAnswer + (Math.floor(Math.random() * 5) - 2);
+            }
+
+            handleBotAnswer(bot, botAnswer);
+
+            }, time);
+        });
+        }
+
+        // Example: When bots answer
+        function handleBotAnswer(bot, answer) {
+        console.log(bot.name + " answered: " + answer);
+        
+        // Check correctness
+        // Move horse forward if correct
+        if (answer === currentCorrectAnswer) {
+            moveHorse(bot.name, 10); // move 10px or units
+        } else {
+            moveHorse(bot.name, 3); // small progress even if wrong (optional)
+        }
+        }
+    </script>
+</body>
+</html>

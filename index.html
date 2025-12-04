@@ -7,11 +7,17 @@
 </head>
 <body>
     <script>
+        // --------------------------------------
+        // BOT SYSTEM
+        // --------------------------------------
+
         // Example bot settings
         const bots = [
         { name: "Bot A", accuracy: 0.40, minTime: 2000, maxTime: 4000 },
         { name: "Bot B", accuracy: 0.55, minTime: 1800, maxTime: 3500 }
         ];
+
+        let currentCorrectAnswer = null;
 
         // Function to calculate the real slope
         function getSlope(x1, y1, x2, y2) {
@@ -28,9 +34,8 @@
 
             // Decide if bot gets it right or wrong
             if (Math.random() < bot.accuracy) {
-                botAnswer = correctAnswer; // correct
+                botAnswer = correctAnswer;
             } else {
-                // wrong but close-ish answer
                 botAnswer = correctAnswer + (Math.floor(Math.random() * 5) - 2);
             }
 
@@ -40,18 +45,36 @@
         });
         }
 
-        // Example: When bots answer
+        // What happens when a bot answers
         function handleBotAnswer(bot, answer) {
         console.log(bot.name + " answered: " + answer);
-        
-        // Check correctness
-        // Move horse forward if correct
+
         if (answer === currentCorrectAnswer) {
-            moveHorse(bot.name, 10); // move 10px or units
+            moveHorse(bot.name, 10);
         } else {
-            moveHorse(bot.name, 3); // small progress even if wrong (optional)
+            moveHorse(bot.name, 3);
         }
         }
+
+        // --------------------------------------
+        // QUESTION GENERATOR
+        // --------------------------------------
+
+        function generateQuestion() {
+        let x1 = 2, y1 = 4, x2 = 5, y2 = 10;
+
+        const slope = getSlope(x1, y1, x2, y2);
+        currentCorrectAnswer = slope;
+
+        // show question to player here
+        console.log("Slope question:", slope);
+
+        // send question to bots
+        askBots({ x1, y1, x2, y2 }, slope);
+        }
+
+        // Run the first question:
+        generateQuestion();
     </script>
 </body>
 </html>

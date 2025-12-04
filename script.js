@@ -108,7 +108,8 @@ function moveHorse(name, distance) {
 // CHECK FOR WINNER
 // ------------------------
 function checkWin() {
-  const finish = window.innerWidth - 120;
+  const track = document.getElementById("track");
+  const finish = track.clientWidth - 70;
 
   const positions = {
     Player: parseInt(document.getElementById("player").style.left || "0"),

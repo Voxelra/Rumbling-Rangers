@@ -47,13 +47,17 @@
 
         // What happens when a bot answers
         function handleBotAnswer(bot, answer) {
-        console.log(bot.name + " answered: " + answer);
+            console.log(bot.name + " answered: " + answer);
 
-        if (answer === currentCorrectAnswer) {
-            moveHorse(bot.name, 10);
-        } else {
-            moveHorse(bot.name, 3);
+            if (answer === currentCorrectAnswer) {
+                moveHorse(bot.name, 10);
+            } else {
+                moveHorse(bot.name, 3);
+            }
         }
+
+        function moveHorse(name, distance) {
+            console.log(name + " moved " + distance + " units");
         }
 
         // --------------------------------------

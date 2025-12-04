@@ -51,3 +51,18 @@ button {
   font-size: 26px;
   font-weight: bold;
 }
+
+#finish {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 10px;
+  height: 100%;
+  background: repeating-linear-gradient(
+    to bottom,
+    white,
+    white 10px,
+    black 10px,
+    black 20px
+  );
+}

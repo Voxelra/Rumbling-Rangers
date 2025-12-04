@@ -109,7 +109,15 @@ function moveHorse(name, distance) {
 // ------------------------
 function checkWin() {
   const track = document.getElementById("track");
-  const finish = track.clientWidth - 70;
+
+  // Width of the track including borders
+  const trackWidth = track.offsetWidth;
+
+  // Horse width is 50px
+  const horseWidth = 50;
+
+  // Correct finish line inside track
+  const finish = trackWidth - horseWidth - 10; // 10px padding so it looks clean
 
   const positions = {
     Player: parseInt(document.getElementById("player").style.left || "0"),

@@ -116,7 +116,6 @@ function checkWin() {
   // Horses are 50px wide
   const horseWidth = 50;
 
-  // THIS is the true finish line (inside the track)
   const finish = trackWidth - horseWidth;
 
   // Get current horse positions (relative to track)

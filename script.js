@@ -15,7 +15,6 @@ let gameOver = false;
 function generateQuestion() {
   if (gameOver) return;
 
-  // Random points for slope
   let x1 = Math.floor(Math.random() * 10);
   let y1 = Math.floor(Math.random() * 10);
   let x2 = Math.floor(Math.random() * 10 + 1);
@@ -29,6 +28,7 @@ function generateQuestion() {
 
   askBots(slope);
 }
+
 
 // ------------------------
 // SLOPE FORMULA
@@ -66,7 +66,6 @@ function askBots(correctAnswer) {
       if (gameOver) return;
 
       let botAnswer;
-
       if (Math.random() < bot.accuracy) {
         botAnswer = correctAnswer;
       } else {
@@ -74,6 +73,9 @@ function askBots(correctAnswer) {
       }
 
       handleBotAnswer(bot, botAnswer);
+
+      // Make the bot answer automatically
+      askBots(correctAnswer);
 
     }, time);
   });

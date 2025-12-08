@@ -58,27 +58,26 @@ function playerSubmit() {
 // ------------------------
 // BOT ANSWERS
 // ------------------------
-function askBots(correctAnswer) {
-  bots.forEach(bot => {
-    const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
+function startBotLoop(bot) {
+  if (gameOver) return;
 
-    setTimeout(() => {
-      if (gameOver) return;
+  const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
 
-      let botAnswer;
-      if (Math.random() < bot.accuracy) {
-        botAnswer = correctAnswer;
-      } else {
-        botAnswer = correctAnswer + (Math.floor(Math.random() * 5) - 2);
-      }
+  setTimeout(() => {
+    if (gameOver) return;
 
-      handleBotAnswer(bot, botAnswer);
+    let botAnswer;
+    if (Math.random() < bot.accuracy) {
+      botAnswer = currentCorrectAnswer;
+    } else {
+      botAnswer = currentCorrectAnswer + (Math.floor(Math.random() * 5) - 2);
+    }
 
-      // Make the bot answer automatically
-      askBots(correctAnswer);
+    handleBotAnswer(bot, botAnswer);
 
-    }, time);
-  });
+    startBotLoop(bot);
+
+  }, time);
 }
 
 function handleBotAnswer(bot, answer) {
@@ -138,3 +137,4 @@ function checkWin() {
 
 // Start the game
 generateQuestion();
+bots.forEach(bot => startBotLoop(bot));

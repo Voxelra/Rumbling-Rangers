@@ -2,8 +2,8 @@
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 0.10, minTime: 600, maxTime: 1000 },
-  { name: "Bot B", accuracy: 0.65, minTime: 600, maxTime: 1000 }
+  { name: "Bot A", accuracy: 0.55, minTime: 600, maxTime: 1000 },
+  { name: "Bot B", accuracy: 0.55, minTime: 600, maxTime: 1000 }
 ];
 
 let currentCorrectAnswer = null;
@@ -38,14 +38,20 @@ function getSlope(x1, y1, x2, y2) {
 // PLAYER SUBMISSION
 // ------------------------
 function playerSubmit() {
-  if (gameOver) return;
+  if (gameOver) return; 
 
   const input = parseFloat(document.getElementById("answerInput").value);
 
-  if (input === currentCorrectAnswer) {
+  if (isCorrect(input, currentCorrectAnswer)) {
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);
+  }
+
+  if (isCorrect(answer, currentCorrectAnswer)) {
+    moveHorse(bot.name, 15);
+  } else {
+    moveHorse(bot.name, 4);
   }
 
   checkWin();

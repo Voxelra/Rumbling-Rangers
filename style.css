@@ -24,9 +24,9 @@ body {
   left: 0;
 }
 
-#player { top: 20px; background: royalblue; }
-#botA   { top: 90px; background: seagreen; }
-#botB   { top: 160px; background: tomato; }
+#player { top: 20px; background: rgb(0, 225, 0); }
+#botA   { top: 90px; background: rgb(255, 255, 2); }
+#botB   { top: 160px; background: rgb(0, 255, 0); }
 
 #question {
   font-size: 22px;

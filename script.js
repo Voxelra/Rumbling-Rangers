@@ -2,8 +2,8 @@
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 100, minTime: 1500, maxTime: 3500 },
-  { name: "Bot B", accuracy: 100, minTime: 1800, maxTime: 3200 }
+  { name: "Bot A", accuracy: 0.55, minTime: 600, maxTime: 1200 },
+  { name: "Bot B", accuracy: 0.55, minTime: 700, maxTime: 1500 }
 ];
 
 let currentCorrectAnswer = null;
@@ -58,7 +58,7 @@ function playerSubmit() {
 function startBotLoop(bot) {
   if (gameOver) return;
 
-  const time = 1;
+  const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
 
   setTimeout(() => {
     if (gameOver) return;

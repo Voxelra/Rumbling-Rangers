@@ -2,7 +2,7 @@
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 0.55, minTime: 500, maxTime: 1000 },
+  { name: "Bot A", accuracy: 0.53, minTime: 500, maxTime: 1000 },
   { name: "Bot B", accuracy: 0.55, minTime: 600, maxTime: 1200 }
 ];
 
@@ -98,8 +98,12 @@ function moveHorse(name, distance) {
   if (name === "Bot B") id = "botB";
 
   const horse = document.getElementById(id);
-  const currentLeft = parseInt(horse.style.left || "0");
-  horse.style.left = (currentLeft + distance) + "px";
+
+  let currentLeft = parseInt(horse.style.left);
+  if (isNaN(currentLeft)) currentLeft = 0;
+
+  const newLeft = currentLeft + distance;
+  horse.style.left = newLeft + "px";
 }
 
 // ------------------------

@@ -25,10 +25,7 @@ function generateQuestion() {
 
   document.getElementById("question").innerHTML =
     `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2})`;
-
-  askBots(slope);
 }
-
 
 // ------------------------
 // SLOPE FORMULA

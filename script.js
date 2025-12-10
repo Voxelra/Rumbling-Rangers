@@ -2,7 +2,7 @@
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 0.53, minTime: 500, maxTime: 1000 },
+  { name: "Bot A", accuracy: 0.45, minTime: 500, maxTime: 1000 },
   { name: "Bot B", accuracy: 0.55, minTime: 600, maxTime: 1200 }
 ];
 

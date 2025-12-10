@@ -2,8 +2,8 @@
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 100, minTime: 1500, maxTime: 3500 },
-  { name: "Bot B", accuracy: 1, minTime: 1800, maxTime: 3200 }
+  { name: "Bot A", accuracy: 100, minTime: 0, maxTime: 0 },
+  { name: "Bot B", accuracy: 100, minTime: 0, maxTime: 0 }
 ];
 
 let currentCorrectAnswer = null;

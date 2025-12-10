@@ -3,7 +3,7 @@
 // ------------------------
 const bots = [
   { name: "Bot A", accuracy: 0.10, minTime: 600, maxTime: 1000 },
-  { name: "Bot B", accuracy: 0.55, minTime: 600, maxTime: 1200 }
+  { name: "Bot B", accuracy: 0.65, minTime: 600, maxTime: 1000 }
 ];
 
 let currentCorrectAnswer = null;

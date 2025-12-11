@@ -9,6 +9,16 @@ const bots = [
 let currentCorrectAnswer = null;
 let gameOver = false;
 
+// Small debounce to avoid instant multiple question regenerations
+let lastQuestionAdvance = 0;
+const QUESTION_ADVANCE_DEBOUNCE_MS = 80; // small window
+
+// Utility: tolerance comparison for decimals
+function isCorrect(a, b, tolerance = 0.02) {
+  if (typeof a !== "number" || typeof b !== "number" || Number.isNaN(a) || Number.isNaN(b)) return false;
+  return Math.abs(a - b) <= tolerance;
+}
+
 // ------------------------
 // GENERATE QUESTION
 // ------------------------
@@ -27,10 +37,6 @@ function generateQuestion() {
     `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2})`;
 }
 
-function isCorrect(a, b, tolerance = 0.01) {
-  return Math.abs(a - b) <= tolerance;
-}
-
 // ------------------------
 // SLOPE FORMULA
 // ------------------------
@@ -42,65 +48,82 @@ function getSlope(x1, y1, x2, y2) {
 // PLAYER SUBMISSION
 // ------------------------
 function playerSubmit() {
-  if (gameOver) return; 
+  if (gameOver) return;
 
-  const input = parseFloat(document.getElementById("answerInput").value);
+  const inputRaw = document.getElementById("answerInput").value;
+  const input = parseFloat(inputRaw);
 
+  // move player based on correctness
   if (isCorrect(input, currentCorrectAnswer)) {
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);
   }
 
+  // clear input
+  document.getElementById("answerInput").value = "";
+
+  // check win and then advance question (continuous rule)
   checkWin();
+  advanceQuestionWithDebounce();
 }
 
 // ------------------------
-// BOT ANSWERS
+// BOT ANSWERS (continuous per-bot loop)
 // ------------------------
 function startBotLoop(bot) {
-  if (gameOver) return;
-
-  const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
-
-  setTimeout(() => {
+  const loop = () => {
     if (gameOver) return;
 
-    let botAnswer;
-    if (Math.random() < bot.accuracy) {
-      botAnswer = currentCorrectAnswer;
-    } else {
-      botAnswer = currentCorrectAnswer + (Math.floor(Math.random() * 5) - 2);
-    }
+    const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
 
-    handleBotAnswer(bot, botAnswer);
+    setTimeout(() => {
+      if (gameOver) return;
 
-    startBotLoop(bot);
+      // decide bot answer
+      let botAnswer;
+      if (Math.random() < bot.accuracy) {
+        botAnswer = currentCorrectAnswer;
+      } else {
+        // generate a plausible wrong answer (may be decimal)
+        const jitter = (Math.floor(Math.random() * 5) - 2);
+        botAnswer = (typeof currentCorrectAnswer === "number")
+                    ? currentCorrectAnswer + jitter
+                    : NaN;
+      }
 
-  }, time);
+      handleBotAnswer(bot, botAnswer);
+
+      loop();
+    }, time);
+  };
+
+  loop();
 }
 
 function handleBotAnswer(bot, answer) {
-  if (answer === currentCorrectAnswer) {
+  // use tolerant check (same as player)
+  if (isCorrect(answer, currentCorrectAnswer)) {
     moveHorse(bot.name, 15);
   } else {
     moveHorse(bot.name, 4);
   }
 
   checkWin();
+  advanceQuestionWithDebounce();
 }
 
 // ------------------------
-// MOVE HORSES
+// MOVE HORSES (safe)
 // ------------------------
 function moveHorse(name, distance) {
   let id;
-
   if (name === "Player") id = "player";
   if (name === "Bot A") id = "botA";
   if (name === "Bot B") id = "botB";
 
   const horse = document.getElementById(id);
+  if (!horse) return;
 
   let currentLeft = parseInt(horse.style.left);
   if (isNaN(currentLeft)) currentLeft = 0;
@@ -110,35 +133,46 @@ function moveHorse(name, distance) {
 }
 
 // ------------------------
-// CHECK FOR WINNER
+// CHECK FOR WINNER (use visible positions)
 // ------------------------
 function checkWin() {
   const track = document.getElementById("track");
+  const trackRect = track.getBoundingClientRect();
 
-  // Get the *internal* width of the track
-  const trackWidth = track.clientWidth;
-
-  // Horses are 50px wide
-  const horseWidth = 50;
-
-  const finish = trackWidth - horseWidth;
-
-  // Get current horse positions (relative to track)
-  const positions = {
-    Player: parseInt(document.getElementById("player").style.left || "0"),
-    "Bot A": parseInt(document.getElementById("botA").style.left || "0"),
-    "Bot B": parseInt(document.getElementById("botB").style.left || "0")
+  const horses = {
+    Player: document.getElementById("player"),
+    "Bot A": document.getElementById("botA"),
+    "Bot B": document.getElementById("botB")
   };
 
-  for (const name in positions) {
-    if (positions[name] >= finish) {
-      document.getElementById("status").innerHTML = `${name} Wins!`;
+  for (const name in horses) {
+    const h = horses[name];
+    const rect = h.getBoundingClientRect();
+
+    // check if the horse's front touches or passes the right edge of the visible track
+    if (rect.right >= trackRect.right) {
+      document.getElementById("status").textContent = `${name} Wins!`;
       gameOver = true;
       return;
     }
   }
 }
 
+// ------------------------
+// Advance question with a tiny debounce so many answers in same frame don't spam
+// ------------------------
+function advanceQuestionWithDebounce() {
+  const now = Date.now();
+  if (now - lastQuestionAdvance < QUESTION_ADVANCE_DEBOUNCE_MS) return;
+  lastQuestionAdvance = now;
+  generateQuestion();
+}
+
+// ------------------------
 // Start the game
+// ------------------------
+document.getElementById("submitBtn").addEventListener("click", playerSubmit);
+
+// initial question then start bots
 generateQuestion();
 bots.forEach(bot => startBotLoop(bot));

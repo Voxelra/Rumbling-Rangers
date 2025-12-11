@@ -3,7 +3,8 @@
 // ------------------------
 
 const answerInput = document.getElementById("answerInput");
-document.getElementById("submitBtn").addEventListener("click", playerSubmit);
+const submitBtn = document.getElementById("submitBtn");
+submitBtn.addEventListener("click", playerSubmit);
 
 // ------------------------
 // BOT SETTINGS
@@ -16,14 +17,11 @@ const bots = [
 let currentCorrectAnswer = null;
 let gameOver = false;
 
-// Small debounce to avoid instant multiple question regenerations
-let lastQuestionAdvance = 0;
-const QUESTION_ADVANCE_DEBOUNCE_MS = 80; // small window
-
-// Utility: tolerance comparison for decimals
-function isCorrect(a, b) {
-  if (typeof a !== "number" || typeof b !== "number" || Number.isNaN(a) || Number.isNaN(b)) return false;
-  return a === b;
+// ------------------------
+// HELPER: ROUND NUMBERS
+// ------------------------
+function roundToTwo(num) {
+  return parseFloat(num.toFixed(2));
 }
 
 // ------------------------
@@ -32,13 +30,13 @@ function isCorrect(a, b) {
 function generateQuestion() {
   if (gameOver) return;
 
-  let x1 = Math.floor(Math.random() * 10);
-  let y1 = Math.floor(Math.random() * 10);
-  let x2 = Math.floor(Math.random() * 10 + 1);
-  let y2 = Math.floor(Math.random() * 10);
+  const x1 = Math.floor(Math.random() * 10);
+  const y1 = Math.floor(Math.random() * 10);
+  const x2 = Math.floor(Math.random() * 10 + 1);
+  const y2 = Math.floor(Math.random() * 10);
 
   const slope = getSlope(x1, y1, x2, y2);
-  currentCorrectAnswer = parseFloat(slope.toFixed(2)); // round to 2 decimals
+  currentCorrectAnswer = roundToTwo(slope); // rounded to 2 decimals
 
   document.getElementById("question").innerHTML =
     `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2}) (round to 2 decimals)`;
@@ -60,9 +58,9 @@ function playerSubmit() {
   const val = parseFloat(answerInput.value);
   answerInput.value = "";
 
-  if (isNaN(val)) return; // ignore invalid input
+  if (isNaN(val)) return; // invalid → ignore
 
-  if (val === currentCorrectAnswer) {  // exact match now works
+  if (val === currentCorrectAnswer) {
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);
@@ -85,7 +83,6 @@ function startBotLoop(bot) {
 
     handleBotAnswer(bot);
     startBotLoop(bot);
-
   }, time);
 }
 
@@ -105,7 +102,7 @@ function handleBotAnswer(bot) {
 }
 
 // ------------------------
-// MOVE HORSES (safe)
+// MOVE HORSES
 // ------------------------
 function moveHorse(name, distance) {
   let id;
@@ -119,12 +116,11 @@ function moveHorse(name, distance) {
   let currentLeft = parseInt(horse.style.left);
   if (isNaN(currentLeft)) currentLeft = 0;
 
-  const newLeft = currentLeft + distance;
-  horse.style.left = newLeft + "px";
+  horse.style.left = currentLeft + distance + "px";
 }
 
 // ------------------------
-// CHECK FOR WINNER (use visible positions)
+// CHECK FOR WINNER
 // ------------------------
 function checkWin() {
   const track = document.getElementById("track");
@@ -140,7 +136,6 @@ function checkWin() {
     const h = horses[name];
     const rect = h.getBoundingClientRect();
 
-    // check if the horse's front touches or passes the right edge of the visible track
     if (rect.right >= trackRect.right) {
       document.getElementById("status").textContent = `${name} Wins!`;
       gameOver = true;
@@ -150,20 +145,7 @@ function checkWin() {
 }
 
 // ------------------------
-// Advance question with a tiny debounce so many answers in same frame don't spam
+// START GAME
 // ------------------------
-function advanceQuestionWithDebounce() {
-  const now = Date.now();
-  if (now - lastQuestionAdvance < QUESTION_ADVANCE_DEBOUNCE_MS) return;
-  lastQuestionAdvance = now;
-  generateQuestion();
-}
-
-// ------------------------
-// Start the game
-// ------------------------
-document.getElementById("submitBtn").addEventListener("click", playerSubmit);
-
-// initial question then start bots
 generateQuestion();
 bots.forEach(bot => startBotLoop(bot));

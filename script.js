@@ -27,6 +27,10 @@ function generateQuestion() {
     `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2})`;
 }
 
+function isCorrect(a, b, tolerance = 0.01) {
+  return Math.abs(a - b) <= tolerance;
+}
+
 // ------------------------
 // SLOPE FORMULA
 // ------------------------
@@ -48,15 +52,10 @@ function playerSubmit() {
     moveHorse("Player", 5);
   }
 
-  if (isCorrect(answer, currentCorrectAnswer)) {
-    moveHorse(bot.name, 15);
-  } else {
-    moveHorse(bot.name, 4);
-  }
-
   checkWin();
   generateQuestion();
 }
+
 
 // ------------------------
 // BOT ANSWERS

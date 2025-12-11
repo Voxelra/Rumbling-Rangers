@@ -53,9 +53,7 @@ function playerSubmit() {
   }
 
   checkWin();
-  generateQuestion();
 }
-
 
 // ------------------------
 // BOT ANSWERS

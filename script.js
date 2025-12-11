@@ -21,9 +21,9 @@ let lastQuestionAdvance = 0;
 const QUESTION_ADVANCE_DEBOUNCE_MS = 80; // small window
 
 // Utility: tolerance comparison for decimals
-function isCorrect(a, b, tolerance = 0.02) {
+function isCorrect(a, b) {
   if (typeof a !== "number" || typeof b !== "number" || Number.isNaN(a) || Number.isNaN(b)) return false;
-  return Math.abs(a - b) <= tolerance;
+  return a === b;
 }
 
 // ------------------------

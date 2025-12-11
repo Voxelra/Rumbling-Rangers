@@ -3,6 +3,7 @@
 // ------------------------
 
 const answerInput = document.getElementById("answerInput");
+document.getElementById("submitBtn").addEventListener("click", playerSubmit);
 
 // ------------------------
 // BOT SETTINGS

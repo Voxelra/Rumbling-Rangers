@@ -1,4 +1,10 @@
 // ------------------------
+// MISC.
+// ------------------------
+
+const answerInput = document.getElementById("answerInput");
+
+// ------------------------
 // BOT SETTINGS
 // ------------------------
 const bots = [

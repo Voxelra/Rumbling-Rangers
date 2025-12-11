@@ -50,67 +50,51 @@ function getSlope(x1, y1, x2, y2) {
 function playerSubmit() {
   if (gameOver) return;
 
-  const inputRaw = document.getElementById("answerInput").value;
-  const input = parseFloat(inputRaw);
+  const val = parseFloat(answerInput.value);
+  answerInput.value = "";
 
-  // move player based on correctness
-  if (isCorrect(input, currentCorrectAnswer)) {
+  if (isNaN(val)) return; // invalid → ignore
+
+  if (isCorrect(val, currentCorrectAnswer)) {
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);
   }
 
-  // clear input
-  document.getElementById("answerInput").value = "";
-
-  // check win and then advance question (continuous rule)
   checkWin();
-  advanceQuestionWithDebounce();
+  generateQuestion();
 }
 
 // ------------------------
 // BOT ANSWERS (continuous per-bot loop)
 // ------------------------
 function startBotLoop(bot) {
-  const loop = () => {
+  if (gameOver) return;
+
+  const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
+
+  setTimeout(() => {
     if (gameOver) return;
 
-    const time = Math.random() * (bot.maxTime - bot.minTime) + bot.minTime;
+    handleBotAnswer(bot);
+    startBotLoop(bot);
 
-    setTimeout(() => {
-      if (gameOver) return;
-
-      // decide bot answer
-      let botAnswer;
-      if (Math.random() < bot.accuracy) {
-        botAnswer = currentCorrectAnswer;
-      } else {
-        // generate a plausible wrong answer (may be decimal)
-        const jitter = (Math.floor(Math.random() * 5) - 2);
-        botAnswer = (typeof currentCorrectAnswer === "number")
-                    ? currentCorrectAnswer + jitter
-                    : NaN;
-      }
-
-      handleBotAnswer(bot, botAnswer);
-
-      loop();
-    }, time);
-  };
-
-  loop();
+  }, time);
 }
 
-function handleBotAnswer(bot, answer) {
-  // use tolerant check (same as player)
-  if (isCorrect(answer, currentCorrectAnswer)) {
+function handleBotAnswer(bot) {
+  if (gameOver) return;
+
+  // Bot decides whether it gets the answer right
+  const correct = Math.random() < bot.accuracy;
+
+  if (correct) {
     moveHorse(bot.name, 15);
   } else {
     moveHorse(bot.name, 4);
   }
 
   checkWin();
-  advanceQuestionWithDebounce();
 }
 
 // ------------------------

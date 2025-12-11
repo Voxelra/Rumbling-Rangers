@@ -38,10 +38,10 @@ function generateQuestion() {
   let y2 = Math.floor(Math.random() * 10);
 
   const slope = getSlope(x1, y1, x2, y2);
-  currentCorrectAnswer = slope;
+  currentCorrectAnswer = parseFloat(slope.toFixed(2)); // round to 2 decimals
 
   document.getElementById("question").innerHTML =
-    `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2})`;
+    `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2}) (round to 2 decimals)`;
 }
 
 // ------------------------
@@ -60,9 +60,9 @@ function playerSubmit() {
   const val = parseFloat(answerInput.value);
   answerInput.value = "";
 
-  if (isNaN(val)) return; // invalid → ignore
+  if (isNaN(val)) return; // ignore invalid input
 
-  if (isCorrect(val, currentCorrectAnswer)) {
+  if (val === currentCorrectAnswer) {  // exact match now works
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);

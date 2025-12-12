@@ -10,8 +10,8 @@ submitBtn.addEventListener("click", playerSubmit);
 // BOT SETTINGS
 // ------------------------
 const bots = [
-  { name: "Bot A", accuracy: 0.55, minTime: 600, maxTime: 1000 },
-  { name: "Bot B", accuracy: 0.55, minTime: 600, maxTime: 1000 }
+  { name: "Bot A", accuracy: 0.35, minTime: 600, maxTime: 1000 },
+  { name: "Bot B", accuracy: 0.35, minTime: 600, maxTime: 1000 }
 ];
 
 let currentCorrectAnswer = null;
@@ -132,7 +132,7 @@ function playerSubmit() {
   if (isCorrect(val, currentCorrectAnswer)) {
     moveHorse("Player", 20); // Move forward on correct answer
   } else {
-    moveHorse("Player", -10); // Move backward on incorrect answer
+    moveHorse("Player", -5); // Move backward on incorrect answer
     console.log("Player: Answer Incorrect! Moving backwards.");
   }
 
@@ -163,7 +163,7 @@ function handleBotAnswer(bot) {
   const correct = Math.random() < bot.accuracy;
 
   if (correct) {
-    moveHorse(bot.name, 15);
+    moveHorse(bot.name, 10);
   } else {
     moveHorse(bot.name, -5); // Bots also move backward on wrong answers
   }

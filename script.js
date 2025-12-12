@@ -92,8 +92,9 @@ function playerSubmit() {
   if (isCorrect(val, currentCorrectAnswer)) {
     moveHorse("Player", 20);
   } else {
-    moveHorse("Player", 5);
-  }
+    moveHorse("Player", -5);
+    console.log("Answer Incorrect: Horse move backwards!")
+  } // Hope this works
 
   checkWin();
   generateQuestion();
@@ -124,7 +125,7 @@ function handleBotAnswer(bot) {
   if (correct) {
     moveHorse(bot.name, 15);
   } else {
-    moveHorse(bot.name, 4);
+    moveHorse(bot.name, -4);
   }
 
   checkWin();

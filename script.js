@@ -74,8 +74,8 @@ function generateQuestion() {
   currentCorrectAnswer = answer;
 }
 
-function isCorrect(a, b) {
-  return a === b;
+function isCorrect(player, actual) {
+  return Math.abs(player - actual) < 0.01; 
 }
 
 // ------------------------
@@ -87,9 +87,9 @@ function playerSubmit() {
   const val = parseFloat(answerInput.value);
   answerInput.value = "";
 
-  if (isNaN(val)) return; // invalid → ignore
+  if (isNaN(val)) return;
 
-  if (val === currentCorrectAnswer) {
+  if (isCorrect(val, currentCorrectAnswer)) {
     moveHorse("Player", 20);
   } else {
     moveHorse("Player", 5);

@@ -27,26 +27,55 @@ function roundToTwo(num) {
 // ------------------------
 // GENERATE QUESTION
 // ------------------------
+// ------------------------
+// GENERATE BASIC MATH QUESTION
+// ------------------------
 function generateQuestion() {
   if (gameOver) return;
 
-  const x1 = Math.floor(Math.random() * 10);
-  const y1 = Math.floor(Math.random() * 10);
-  const x2 = Math.floor(Math.random() * 10 + 1);
-  const y2 = Math.floor(Math.random() * 10);
+  // Random integers including negatives
+  const a = Math.floor(Math.random() * 21) - 10; // -10 to 10
+  const b = Math.floor(Math.random() * 21) - 10; // -10 to 10
 
-  const slope = getSlope(x1, y1, x2, y2);
-  currentCorrectAnswer = roundToTwo(slope); // rounded to 2 decimals
+  // Random operator
+  const operators = ["+", "-", "*", "/"];
+  const op = operators[Math.floor(Math.random() * operators.length)];
 
+  // Build expression string
   document.getElementById("question").innerHTML =
-    `Find the slope between (${x1}, ${y1}) and (${x2}, ${y2}) (round to 2 decimals)`;
+    `Solve: ${a} ${op} ${b}`;
+
+  // Compute correct answer
+  let answer;
+
+  switch (op) {
+    case "+":
+      answer = a + b;
+      break;
+
+    case "-":
+      answer = a - b;
+      break;
+
+    case "*":
+      answer = a * b;
+      break;
+
+    case "/":
+      // Avoid division by zero
+      if (b === 0) {
+        generateQuestion();
+        return;
+      }
+      answer = parseFloat((a / b).toFixed(2)); // round to 2 decimals
+      break;
+  }
+
+  currentCorrectAnswer = answer;
 }
 
-// ------------------------
-// SLOPE FORMULA
-// ------------------------
-function getSlope(x1, y1, x2, y2) {
-  return (y2 - y1) / (x2 - x1);
+function isCorrect(a, b) {
+  return a === b;
 }
 
 // ------------------------
